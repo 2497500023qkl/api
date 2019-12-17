@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>抢购</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    var shi=0;
+    var int=null;
+    var sta="";
+$.get("http://127.0.0.1:8084/cha1",function(data,status){
+    shi=parseInt(data.split('.')[0]);
+    if(data.split('.')[1]=="开始"){
+        $("#count2").html((shi+1)+"秒开始");
+        $("#count4").html(Math.floor((shi+1)/60)+"分");
+        sta="开始";
+        int=self.setInterval(terval,1000);
+    }else if(data.split('.')[1]=="结束"){
+        $("#count2").html((shi+1)+"秒结束");
+        $("#count4").html(Math.floor((shi+1)/60)+"分");
+        sta="结束";
+        int=self.setInterval(terval,1000);
+    }else{
+        $("#count3").html("以结束");
+    }
+});
+function terval(){
+    shi--
+    $("#count4").html(Math.floor((shi+1)/60)+"分");
+    if(sta=="开始"){
+        $("#count2").html((shi+1)%60+"秒开始");
+    }else{
+        $("#count2").html((shi+1)%60+"秒结束");
+    }
+    if(shi==-1){
+        clearInterval(int);
+        $.get("http://127.0.0.1:8084/cha1",function(data,status){
+    shi=parseInt(data.split('.')[0]);
+    if(data.split('.')[1]=="开始"){ 
+        sta="开始";
+        $("#count2").html((shi+1)%60+"秒开始");
+        int=self.setInterval(terval,1000);
+    }else if(data.split('.')[1]=="结束"){
+        $("#count2").html((shi+1)%60+"秒结束");
+        sta="结束";
+        int=self.setInterval(terval,1000);
+    }else{
+        $("#count3").html("以结束");
+    }
+});
+    }
+}
+$.get("http://127.0.0.1:8084/cha",function(data,status){
+    $("#count1").html(data+'件');
+});
+function d(){
+$.get("http://127.0.0.1:8084/zeng",{
+    id:Math.random()*200,
+},function(data,status){
+    $("#600").html(data);
+    $.get("http://127.0.0.1:8084/cha",function(data,status){
+    $("#count1").html(data+'件');
+});
+})
+}
+</script>
+<style>
+.bo{
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    font-size:25px;
+}
+ button{
+     height:50px;
+     width: 100px;
+     font-size:25px;
+ }
+</style>
+</head>
+<body>
+    <div class="bo">
+        <div>慈善抢购</div>
+    <button id="rush" onclick="d()">抢购</button>
+    <span id="600"></span>
+    <div>还有<span id="count1"></span></div>
+    <div id="count3">还剩<span id="count4"></span><span id="count2"></span></div>
+    <div>
+</body>
+</html>

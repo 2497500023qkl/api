@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @SpringBootApplication
-@MapperScan("com.example.jdbc.mapper")
+@MapperScan("com.example.jdbc")
 public class JdbcApplication {
 	@PostConstruct
 	void setDefaultTimezone() {
